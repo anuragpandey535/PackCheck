@@ -1,0 +1,10 @@
+{
+  "name": "PackCheck",
+  "description": "Legal Metrology Compliance Enforcement & Inspection System with real-time camera capture, AI label verification, and statutory reporting under Legal Metrology Rules.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
