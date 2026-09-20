@@ -198,6 +198,54 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
     onShowToast('info', 'Sample Package Loaded', 'Sample package images and store details loaded for testing.');
   };
 
+// Helper to downscale and compress images to prevent hitting cloud payload limits
+function compressImageToBase64(blob: Blob | File): Promise<{ data: string; mimeType: string }> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX_DIM = 1400;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_DIM) {
+            height = Math.round((height * MAX_DIM) / width);
+            width = MAX_DIM;
+          }
+        } else {
+          if (height > MAX_DIM) {
+            width = Math.round((width * MAX_DIM) / height);
+            height = MAX_DIM;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          const base64 = dataUrl.split(',')[1] || '';
+          resolve({ data: base64, mimeType: 'image/jpeg' });
+          return;
+        }
+        const r = e.target?.result as string;
+        resolve({ data: r.includes(',') ? r.split(',')[1] : r, mimeType: 'image/jpeg' });
+      };
+      img.onerror = () => {
+        const r = e.target?.result as string;
+        resolve({ data: r ? (r.includes(',') ? r.split(',')[1] : r) : '', mimeType: 'image/jpeg' });
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => resolve({ data: '', mimeType: 'image/jpeg' });
+    reader.readAsDataURL(blob);
+  });
+}
+
   // Start AI analysis pipeline
   const handleStartAnalysis = async () => {
     if (images.length === 0) {
@@ -214,40 +262,25 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
       await new Promise((r) => setTimeout(r, 600));
       setAnalysisStep(2);
 
-      // Convert images to base64 for API
+      // Convert and compress images for API
       const base64Images: { data: string; mimeType: string }[] = await Promise.all(
         images.map(async (img) => {
           if (img.file) {
-            return new Promise<{ data: string; mimeType: string }>((resolve) => {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                const res = reader.result as string;
-                const base64 = res.includes(',') ? res.split(',')[1] : res;
-                resolve({ data: base64, mimeType: img.file?.type || 'image/jpeg' });
-              };
-              reader.onerror = () => resolve({ data: '', mimeType: 'image/jpeg' });
-              reader.readAsDataURL(img.file);
-            });
+            return compressImageToBase64(img.file);
           } else if (img.previewUrl.startsWith('data:')) {
-            const parts = img.previewUrl.split(',');
-            const mimeMatch = img.previewUrl.match(/data:([^;]+);/);
-            const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-            return { data: parts[1] || '', mimeType };
-          } else {
-            // For remote preview URLs or object URLs
             try {
               const res = await fetch(img.previewUrl);
               const blob = await res.blob();
-              return new Promise<{ data: string; mimeType: string }>((resolve) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  const r = reader.result as string;
-                  const base64 = r.includes(',') ? r.split(',')[1] : r;
-                  resolve({ data: base64, mimeType: blob.type || 'image/jpeg' });
-                };
-                reader.onerror = () => resolve({ data: '', mimeType: 'image/jpeg' });
-                reader.readAsDataURL(blob);
-              });
+              return compressImageToBase64(blob);
+            } catch (e) {
+              const parts = img.previewUrl.split(',');
+              return { data: parts[1] || '', mimeType: 'image/jpeg' };
+            }
+          } else {
+            try {
+              const res = await fetch(img.previewUrl);
+              const blob = await res.blob();
+              return compressImageToBase64(blob);
             } catch (e) {
               return { data: '', mimeType: 'image/jpeg' };
             }
