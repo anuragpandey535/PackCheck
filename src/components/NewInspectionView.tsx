@@ -278,7 +278,55 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
           analysisResult = await response.json();
         }
       } catch (apiErr) {
-        console.warn('Backend API call fallback to local rule validator:', apiErr);
+        console.warn('Backend API call fallback:', apiErr);
+      }
+
+      // If backend API is not reachable (e.g. static hosting like Netlify Drop / GitHub Pages), try client-side Gemini
+      if (!analysisResult || !analysisResult.data) {
+        const clientApiKey = localStorage.getItem('packcheck_gemini_api_key') || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+        if (clientApiKey) {
+          try {
+            const prompt = `You are a certified Legal Metrology Enforcement Officer and precise OCR scanner in India specializing in PCR 2011.
+Scan the package and extract: commodityName, brand, manufacturer, mfgAddress, countryOfOrigin, netQuantity, mrp, unitSalePrice, mfgDate, expiryDate, batchNumber (exact B.No. or BN), consumerCare, status ("COMPLIANT"|"REVIEW_REQUIRED"|"NON_COMPLIANT"), score (number), officerRemarks, actionTaken.
+Return ONLY valid JSON matching this schema.`;
+
+            const imageParts = base64Images.filter((img) => img.data.length > 0).map((img) => ({
+              inline_data: {
+                mime_type: img.mimeType || 'image/jpeg',
+                data: img.data,
+              },
+            }));
+
+            const directRes = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${clientApiKey}`,
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: [
+                    {
+                      parts: [...imageParts, { text: prompt }],
+                    },
+                  ],
+                  generationConfig: {
+                    responseMimeType: 'application/json',
+                  },
+                }),
+              }
+            );
+
+            if (directRes.ok) {
+              const resJson = await directRes.json();
+              const text = resJson?.candidates?.[0]?.content?.parts?.[0]?.text;
+              if (text) {
+                const cleaned = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+                analysisResult = { success: true, data: JSON.parse(cleaned) };
+              }
+            }
+          } catch (clientErr) {
+            console.warn('Direct client-side Gemini extraction failed:', clientErr);
+          }
+        }
       }
 
       setAnalysisStep(5); // Finalizing

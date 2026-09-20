@@ -26,9 +26,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ language, onShowToas
   const [enforceUspMandate, setEnforceUspMandate] = useState<boolean>(true);
   const [strictFontHeightAudit, setStrictFontHeightAudit] = useState<boolean>(true);
   const [defaultJurisdiction, setDefaultJurisdiction] = useState<string>('Northern Enforcement Zone');
+  const [geminiApiKey, setGeminiApiKey] = useState<string>(() => {
+    return localStorage.getItem('packcheck_gemini_api_key') || '';
+  });
 
   const handleSave = () => {
-    onShowToast('success', 'Settings Saved', 'Legal Metrology enforcement parameters updated successfully.');
+    if (geminiApiKey.trim()) {
+      localStorage.setItem('packcheck_gemini_api_key', geminiApiKey.trim());
+    } else {
+      localStorage.removeItem('packcheck_gemini_api_key');
+    }
+    onShowToast('success', 'Settings Saved', 'Legal Metrology enforcement parameters & API credentials updated.');
   };
 
   return (
@@ -44,7 +52,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ language, onShowToas
               {t('settings')} & Compliance Engine Configuration
             </h1>
             <p className="text-xs sm:text-sm text-blue-100/90 max-w-xl">
-              Configure OCR thresholds, Legal Metrology (PCR 2011) compliance rules, and digital memorandum seals.
+              Configure OCR thresholds, Legal Metrology (PCR 2011) compliance rules, Gemini AI API key, and digital memorandum seals.
             </p>
           </div>
         </div>
@@ -61,6 +69,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ language, onShowToas
 
           <div className="space-y-4 text-xs">
             <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Google Gemini API Key (For Direct Static / Serverless Deployments)
+              </label>
+              <input
+                type="password"
+                value={geminiApiKey}
+                onChange={(e) => setGeminiApiKey(e.target.value)}
+                placeholder="AIzaSy..."
+                className="w-full px-3 py-2 bg-slate-50 focus:bg-white rounded-xl border border-slate-200 focus:border-blue-500 font-mono text-slate-800"
+              />
+              <p className="text-[11px] text-slate-500 mt-1">
+                Required when deployed to static hosts (Netlify Drop, GitHub Pages, Vercel). Automatically stored securely in your browser.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100">
               <div className="flex items-center justify-between font-semibold text-slate-800 mb-1">
                 <span>OCR Confidence Score Threshold</span>
                 <span className="text-blue-600 font-bold">{ocrConfidenceThreshold}%</span>
