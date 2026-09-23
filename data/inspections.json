@@ -1,5 +1,734 @@
 [
   {
+    "id": "ins_1790189399950",
+    "memoNumber": "LM/ENF/2026/2410",
+    "createdAt": "2026-09-23T18:51:04.565Z",
+    "commodityName": "Chia Seeds",
+    "category": "Food & Beverages",
+    "packageType": "Pouch / Sachet",
+    "brand": "Happilo",
+    "manufacturer": "Happilo International Pvt. Ltd.",
+    "mfgAddress": "# 10/1 & 11/2, Arjunabettahalli, Kasaba Hobli, Nelamangala, Bengaluru Rural 562123, Karnataka, India.",
+    "countryOfOrigin": "India",
+    "netQuantity": "200 g",
+    "mrp": "Rs. 199.00 (Incl. of all taxes)",
+    "unitSalePrice": "Rs. 1.00/g",
+    "mfgDate": "24/04/26",
+    "expiryDate": "23/04/27",
+    "consumerCare": "Happilo International Pvt. Ltd., # 10/1 & 11/2, Arjunabettahalli, Kasaba Hobli, Nelamangala, Bengaluru Rural 562123, Karnataka, India. Phone: +91 888 448 4000, email: care@happilo.com",
+    "status": "COMPLIANT",
+    "score": 100,
+    "officerName": "Insp. Aniket Verma",
+    "officerDesignation": "Senior Legal Metrology Officer",
+    "inspectionLocation": "Connaught Place, New Delhi",
+    "storeName": "Metro Supermarket & Mart",
+    "storeAddress": "Connaught Place, New Delhi",
+    "declarations": [
+      {
+        "id": "d-1",
+        "fieldName": "Name and Address of Manufacturer",
+        "ruleReference": "Rule 6(1)(a)",
+        "extractedValue": "Happilo International Pvt. Ltd., # 10/1 & 11/2, Arjunabettahalli, Kasaba Hobli, Nelamangala, Bengaluru Rural 562123, Karnataka, India.",
+        "status": "passed",
+        "confidence": 0.98,
+        "legalNote": "Complete postal address with PIN code verified."
+      },
+      {
+        "id": "d-2",
+        "fieldName": "Generic Commodity Name",
+        "ruleReference": "Rule 6(1)(b)",
+        "extractedValue": "Chia Seeds",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Clearly identified on package label."
+      },
+      {
+        "id": "d-3",
+        "fieldName": "Net Quantity in Standard Metric Units",
+        "ruleReference": "Rule 6(1)(c)",
+        "extractedValue": "200 g",
+        "status": "passed",
+        "confidence": 0.97,
+        "fontHeightMm": 4.2,
+        "minRequiredFontMm": 4,
+        "legalNote": "Standard metric unit used."
+      },
+      {
+        "id": "d-4",
+        "fieldName": "Month and Year of Manufacture / Packing",
+        "ruleReference": "Rule 6(1)(d)",
+        "extractedValue": "Mfg: 24/04/26 | Expiry: 23/04/27",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Standard date format compliant with PCR 2011."
+      },
+      {
+        "id": "d-5",
+        "fieldName": "Maximum Retail Price (MRP)",
+        "ruleReference": "Rule 6(1)(e)",
+        "extractedValue": "Rs. 199.00 (Incl. of all taxes)",
+        "status": "passed",
+        "confidence": 0.98,
+        "legalNote": "Mandatory phrase \"inclusive of all taxes\" verified."
+      },
+      {
+        "id": "d-6",
+        "fieldName": "Unit Sale Price (USP)",
+        "ruleReference": "Rule 6(11)",
+        "extractedValue": "Rs. 1.00/g",
+        "status": "passed",
+        "confidence": 0.95,
+        "legalNote": "Unit Sale Price declared on package as per 2021/2022 PCR amendment."
+      },
+      {
+        "id": "d-7",
+        "fieldName": "Country of Origin",
+        "ruleReference": "Rule 6(10)",
+        "extractedValue": "India",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Mandatory origin declaration verified."
+      },
+      {
+        "id": "d-8",
+        "fieldName": "Consumer Care / Grievance Redressal",
+        "ruleReference": "Rule 6(1)(g)",
+        "extractedValue": "Happilo International Pvt. Ltd., # 10/1 & 11/2, Arjunabettahalli, Kasaba Hobli, Nelamangala, Bengaluru Rural 562123, Karnataka, India. Phone: +91 888 448 4000, email: care@happilo.com",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Contact helpline, email, or postal address present."
+      },
+      {
+        "id": "d-9",
+        "fieldName": "Batch / Lot Identification Number",
+        "ruleReference": "Rule 6(1) & FSSAI/PCR Marking",
+        "extractedValue": "A12402F0T1",
+        "status": "passed",
+        "confidence": 0.97,
+        "legalNote": "Batch / Lot identification code recorded for batch trace."
+      }
+    ],
+    "findings": [
+      {
+        "id": "f-1",
+        "ruleNumber": "Rule 6(1)(a)-(g)",
+        "ruleTitle": "Mandatory Statutory Declarations Compliance",
+        "severity": "compliant",
+        "evidence": "All 8 mandatory declarations found compliant with Legal Metrology (Packaged Commodities) Rules, 2011.",
+        "explanation": "No missing mandatory fields, correct font sizing, and valid Unit Sale Price declaration.",
+        "legalClause": "Section 36(1) of Legal Metrology Act, 2009",
+        "penaltySection": "None (Fully Compliant)",
+        "recommendedAction": "Issue Certificate of Compliance.",
+        "status": "passed"
+      }
+    ],
+    "images": [
+      {
+        "id": "img_1790189412300_0",
+        "file": {},
+        "previewUrl": "blob:http://localhost:3000/ca8013a8-0c83-4c94-bda7-96594031aa57",
+        "labelType": "front",
+        "timestamp": "00:20",
+        "source": "upload"
+      }
+    ],
+    "remarks": "Package contains all mandatory declarations required under Rule 6 of the Legal Metrology (Packaged Commodities) Rules, 2011 including net quantity, MRP, batch number, manufacturer details, and date of manufacture/use-by.",
+    "actionTaken": "No action required, package is compliant with Legal Metrology labeling norms.",
+    "batchNumber": "A12402F0T1",
+    "lotSize": 500,
+    "samplesTested": 32,
+    "sampleSufficient": true,
+    "statutorySamplingNote": "Rule requires testing a sample size of at least 20 packets before generating the legal report."
+  },
+  {
+    "id": "ins_1790189168765",
+    "memoNumber": "LM/ENF/2026/8341",
+    "createdAt": "2026-09-23T18:48:47.253Z",
+    "commodityName": "Chia Seeds",
+    "category": "Food & Beverages",
+    "packageType": "Pouch / Sachet",
+    "brand": "Happilo",
+    "manufacturer": "Happilo International Pvt. Ltd.",
+    "mfgAddress": "# 10/1 & 11/2, Arjunabettahalli, Kasaba Hobli, Nelamangala, Bengaluru Rural 562123, Karnataka, India.",
+    "countryOfOrigin": "India",
+    "netQuantity": "200 g",
+    "mrp": "Rs. 199.00 (Incl. of all taxes)",
+    "unitSalePrice": "Rs. 1.00/g",
+    "mfgDate": "24/04/26",
+    "expiryDate": "23/04/27",
+    "consumerCare": "Happilo International Pvt. Ltd. Customer Care: +91 888 448 4000, Email: care@happilo.com, Address: # 10/1 & 11/2, Arjunabettahalli, Kasaba Hobli, Nelamangala, Bengaluru Rural 562123, Karnataka, India.",
+    "status": "COMPLIANT",
+    "score": 100,
+    "officerName": "Insp. Aniket Verma",
+    "officerDesignation": "Senior Legal Metrology Officer",
+    "inspectionLocation": "Connaught Place, New Delhi",
+    "storeName": "Metro Supermarket & Mart",
+    "storeAddress": "Connaught Place, New Delhi",
+    "declarations": [
+      {
+        "id": "d-1",
+        "fieldName": "Name and Address of Manufacturer",
+        "ruleReference": "Rule 6(1)(a)",
+        "extractedValue": "Happilo International Pvt. Ltd., # 10/1 & 11/2, Arjunabettahalli, Kasaba Hobli, Nelamangala, Bengaluru Rural 562123, Karnataka, India.",
+        "status": "passed",
+        "confidence": 0.98,
+        "legalNote": "Complete postal address with PIN code verified."
+      },
+      {
+        "id": "d-2",
+        "fieldName": "Generic Commodity Name",
+        "ruleReference": "Rule 6(1)(b)",
+        "extractedValue": "Chia Seeds",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Clearly identified on package label."
+      },
+      {
+        "id": "d-3",
+        "fieldName": "Net Quantity in Standard Metric Units",
+        "ruleReference": "Rule 6(1)(c)",
+        "extractedValue": "200 g",
+        "status": "passed",
+        "confidence": 0.97,
+        "fontHeightMm": 4.2,
+        "minRequiredFontMm": 4,
+        "legalNote": "Standard metric unit used."
+      },
+      {
+        "id": "d-4",
+        "fieldName": "Month and Year of Manufacture / Packing",
+        "ruleReference": "Rule 6(1)(d)",
+        "extractedValue": "Mfg: 24/04/26 | Expiry: 23/04/27",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Standard date format compliant with PCR 2011."
+      },
+      {
+        "id": "d-5",
+        "fieldName": "Maximum Retail Price (MRP)",
+        "ruleReference": "Rule 6(1)(e)",
+        "extractedValue": "Rs. 199.00 (Incl. of all taxes)",
+        "status": "passed",
+        "confidence": 0.98,
+        "legalNote": "Mandatory phrase \"inclusive of all taxes\" verified."
+      },
+      {
+        "id": "d-6",
+        "fieldName": "Unit Sale Price (USP)",
+        "ruleReference": "Rule 6(11)",
+        "extractedValue": "Rs. 1.00/g",
+        "status": "passed",
+        "confidence": 0.95,
+        "legalNote": "Unit Sale Price declared on package as per 2021/2022 PCR amendment."
+      },
+      {
+        "id": "d-7",
+        "fieldName": "Country of Origin",
+        "ruleReference": "Rule 6(10)",
+        "extractedValue": "India",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Mandatory origin declaration verified."
+      },
+      {
+        "id": "d-8",
+        "fieldName": "Consumer Care / Grievance Redressal",
+        "ruleReference": "Rule 6(1)(g)",
+        "extractedValue": "Happilo International Pvt. Ltd. Customer Care: +91 888 448 4000, Email: care@happilo.com, Address: # 10/1 & 11/2, Arjunabettahalli, Kasaba Hobli, Nelamangala, Bengaluru Rural 562123, Karnataka, India.",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Contact helpline, email, or postal address present."
+      },
+      {
+        "id": "d-9",
+        "fieldName": "Batch / Lot Identification Number",
+        "ruleReference": "Rule 6(1) & FSSAI/PCR Marking",
+        "extractedValue": "A12402F0T1",
+        "status": "passed",
+        "confidence": 0.97,
+        "legalNote": "Batch / Lot identification code recorded for batch trace."
+      }
+    ],
+    "findings": [
+      {
+        "id": "f-1",
+        "ruleNumber": "Rule 6(1)(a)-(g)",
+        "ruleTitle": "Mandatory Statutory Declarations Compliance",
+        "severity": "compliant",
+        "evidence": "All 8 mandatory declarations found compliant with Legal Metrology (Packaged Commodities) Rules, 2011.",
+        "explanation": "No missing mandatory fields, correct font sizing, and valid Unit Sale Price declaration.",
+        "legalClause": "Section 36(1) of Legal Metrology Act, 2009",
+        "penaltySection": "None (Fully Compliant)",
+        "recommendedAction": "Issue Certificate of Compliance.",
+        "status": "passed"
+      }
+    ],
+    "images": [
+      {
+        "id": "img_1790189262996_0",
+        "file": {},
+        "previewUrl": "blob:http://localhost:3000/5bdee6ce-ba8d-4d15-8cba-f51e6a5aa136",
+        "labelType": "front",
+        "timestamp": "00:17",
+        "source": "upload"
+      }
+    ],
+    "remarks": "The package label contains all mandatory declarations required under Rule 6 of the Legal Metrology (Packaged Commodities) Rules, 2011, including commodity name, manufacturer details, MRP, net quantity, unit sale price, date of manufacture, expiry date, and batch number.",
+    "actionTaken": "No action required, package is compliant.",
+    "batchNumber": "A12402F0T1",
+    "lotSize": 500,
+    "samplesTested": 32,
+    "sampleSufficient": true,
+    "statutorySamplingNote": "Rule requires testing a sample size of at least 20 packets before generating the legal report."
+  },
+  {
+    "id": "ins_1790189029980",
+    "memoNumber": "LM/ENF/2026/6172",
+    "createdAt": "2026-09-23T18:44:54.029Z",
+    "commodityName": "MOONG DAL (SPLIT)",
+    "category": "Food & Beverages",
+    "packageType": "Pouch / Sachet",
+    "brand": "AASHIRVAAD Organic",
+    "manufacturer": "ITC Limited",
+    "mfgAddress": "ITC Limited, Virginia House, 37 J.L. Nehru Road, Kolkata - 700071, INDIA",
+    "countryOfOrigin": "India",
+    "netQuantity": "500 g",
+    "mrp": "",
+    "unitSalePrice": "",
+    "mfgDate": "",
+    "expiryDate": "",
+    "consumerCare": "ITC CARES AT P.O. BOX NO. 592, BENGALURU - 560 005, Email: itccares@itc.in, Phone: 1800 425 444 444",
+    "status": "REVIEW_REQUIRED",
+    "score": 65,
+    "officerName": "Insp. Aniket Verma",
+    "officerDesignation": "Senior Legal Metrology Officer",
+    "inspectionLocation": "Connaught Place, New Delhi",
+    "storeName": "Metro Supermarket & Mart",
+    "storeAddress": "Connaught Place, New Delhi",
+    "declarations": [
+      {
+        "id": "d-1",
+        "fieldName": "Name and Address of Manufacturer",
+        "ruleReference": "Rule 6(1)(a)",
+        "extractedValue": "ITC Limited, ITC Limited, Virginia House, 37 J.L. Nehru Road, Kolkata - 700071, INDIA",
+        "status": "passed",
+        "confidence": 0.98,
+        "legalNote": "Complete postal address with PIN code verified."
+      },
+      {
+        "id": "d-2",
+        "fieldName": "Generic Commodity Name",
+        "ruleReference": "Rule 6(1)(b)",
+        "extractedValue": "MOONG DAL (SPLIT)",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Clearly identified on package label."
+      },
+      {
+        "id": "d-3",
+        "fieldName": "Net Quantity in Standard Metric Units",
+        "ruleReference": "Rule 6(1)(c)",
+        "extractedValue": "500 g",
+        "status": "passed",
+        "confidence": 0.97,
+        "fontHeightMm": 4.2,
+        "minRequiredFontMm": 4,
+        "legalNote": "Standard metric unit used."
+      },
+      {
+        "id": "d-4",
+        "fieldName": "Month and Year of Manufacture / Packing",
+        "ruleReference": "Rule 6(1)(d)",
+        "extractedValue": "Not Found on Label",
+        "status": "warning",
+        "confidence": 0.4,
+        "legalNote": "Date of manufacturing/packaging not clearly identified."
+      },
+      {
+        "id": "d-5",
+        "fieldName": "Maximum Retail Price (MRP)",
+        "ruleReference": "Rule 6(1)(e)",
+        "extractedValue": "Not Found on Label",
+        "status": "missing",
+        "confidence": 0.4,
+        "legalNote": "MRP not found on scanned package."
+      },
+      {
+        "id": "d-6",
+        "fieldName": "Unit Sale Price (USP)",
+        "ruleReference": "Rule 6(11)",
+        "extractedValue": "Not Found on Label",
+        "status": "violation",
+        "confidence": 0.4,
+        "legalNote": "Mandatory USP missing for packages > 200g/200ml under Rule 6(11)."
+      },
+      {
+        "id": "d-7",
+        "fieldName": "Country of Origin",
+        "ruleReference": "Rule 6(10)",
+        "extractedValue": "India",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Mandatory origin declaration verified."
+      },
+      {
+        "id": "d-8",
+        "fieldName": "Consumer Care / Grievance Redressal",
+        "ruleReference": "Rule 6(1)(g)",
+        "extractedValue": "ITC CARES AT P.O. BOX NO. 592, BENGALURU - 560 005, Email: itccares@itc.in, Phone: 1800 425 444 444",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Contact helpline, email, or postal address present."
+      },
+      {
+        "id": "d-9",
+        "fieldName": "Batch / Lot Identification Number",
+        "ruleReference": "Rule 6(1) & FSSAI/PCR Marking",
+        "extractedValue": "B.No. Number",
+        "status": "passed",
+        "confidence": 0.97,
+        "legalNote": "Batch / Lot identification code recorded for batch trace."
+      }
+    ],
+    "findings": [
+      {
+        "id": "f-1",
+        "ruleNumber": "Rule 6(1)(e)",
+        "ruleTitle": "Non-Compliance with Maximum Retail Price (MRP)",
+        "severity": "major_violation",
+        "evidence": "Extracted value: \"Not Found on Label\". MRP not found on scanned package.",
+        "explanation": "The package violates statutory mandate under Rule 6(1)(e).",
+        "legalClause": "Section 36(1) & Section 36(2) of Legal Metrology Act, 2009",
+        "penaltySection": "Compounding fine up to ₹25,000 for first offense",
+        "recommendedAction": "Issue Statutory Notice under Section 36(1). Seize sample if non-rectified.",
+        "status": "failed"
+      },
+      {
+        "id": "f-2",
+        "ruleNumber": "Rule 6(11)",
+        "ruleTitle": "Non-Compliance with Unit Sale Price (USP)",
+        "severity": "major_violation",
+        "evidence": "Extracted value: \"Not Found on Label\". Mandatory USP missing for packages > 200g/200ml under Rule 6(11).",
+        "explanation": "The package violates statutory mandate under Rule 6(11).",
+        "legalClause": "Section 36(1) & Section 36(2) of Legal Metrology Act, 2009",
+        "penaltySection": "Compounding fine up to ₹25,000 for first offense",
+        "recommendedAction": "Issue Statutory Notice under Section 36(1). Seize sample if non-rectified.",
+        "status": "failed"
+      }
+    ],
+    "images": [
+      {
+        "id": "img_1790189034958_0",
+        "file": {},
+        "previewUrl": "blob:http://localhost:3000/74515422-d6b9-4916-84be-9ee89af1558a",
+        "labelType": "front",
+        "timestamp": "00:13",
+        "source": "upload"
+      }
+    ],
+    "remarks": "Mandatory static information (brand, commodity name, net weight, country of origin, manufacturer details, and consumer care) is properly declared. However, variable details such as Batch No., Packaging Date (PKD), Use By Date, MRP, and Unit Sale Price are blank on this artwork label.",
+    "actionTaken": "Verify physical pack at retail level to ensure variable data (MRP, PKD, Batch No., USP) is properly inkjet-printed/stamped.",
+    "batchNumber": "B.No. Number",
+    "lotSize": 500,
+    "samplesTested": 32,
+    "sampleSufficient": true,
+    "statutorySamplingNote": "Rule requires testing a sample size of at least 20 packets before generating the legal report."
+  },
+  {
+    "id": "ins_1790188258379",
+    "memoNumber": "LM/ENF/2026/2785",
+    "createdAt": "2026-09-23T18:31:36.170Z",
+    "commodityName": "Cake",
+    "category": "Food & Beverages",
+    "packageType": "Pouch / Sachet",
+    "brand": "BRITANNIA",
+    "manufacturer": "BRITANNIA INDUSTRIES LTD.",
+    "mfgAddress": "",
+    "countryOfOrigin": "India",
+    "netQuantity": "",
+    "mrp": "30.00",
+    "unitSalePrice": "₹ 0.27/g",
+    "mfgDate": "09/06/26",
+    "expiryDate": "08/10/26",
+    "consumerCare": "Executive, Consumer Care Cell, 1-800-4254449 / 1-800-30004530 (Toll Free), Britannia Industries Ltd.",
+    "status": "REVIEW_REQUIRED",
+    "score": 85,
+    "officerName": "Insp. Aniket Verma",
+    "officerDesignation": "Senior Legal Metrology Officer",
+    "inspectionLocation": "Connaught Place, New Delhi",
+    "storeName": "Metro Supermarket & Mart",
+    "storeAddress": "Connaught Place, New Delhi",
+    "declarations": [
+      {
+        "id": "d-1",
+        "fieldName": "Name and Address of Manufacturer",
+        "ruleReference": "Rule 6(1)(a)",
+        "extractedValue": "BRITANNIA INDUSTRIES LTD.",
+        "status": "passed",
+        "confidence": 0.98,
+        "legalNote": "Complete postal address with PIN code verified."
+      },
+      {
+        "id": "d-2",
+        "fieldName": "Generic Commodity Name",
+        "ruleReference": "Rule 6(1)(b)",
+        "extractedValue": "Cake",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Clearly identified on package label."
+      },
+      {
+        "id": "d-3",
+        "fieldName": "Net Quantity in Standard Metric Units",
+        "ruleReference": "Rule 6(1)(c)",
+        "extractedValue": "Not Found on Label",
+        "status": "missing",
+        "confidence": 0.4,
+        "fontHeightMm": 4.2,
+        "minRequiredFontMm": 4,
+        "legalNote": "Net quantity declaration missing or unclear."
+      },
+      {
+        "id": "d-4",
+        "fieldName": "Month and Year of Manufacture / Packing",
+        "ruleReference": "Rule 6(1)(d)",
+        "extractedValue": "Mfg: 09/06/26 | Expiry: 08/10/26",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Standard date format compliant with PCR 2011."
+      },
+      {
+        "id": "d-5",
+        "fieldName": "Maximum Retail Price (MRP)",
+        "ruleReference": "Rule 6(1)(e)",
+        "extractedValue": "30.00",
+        "status": "violation",
+        "confidence": 0.98,
+        "legalNote": "Missing mandatory statutory phrase \"(inclusive of all taxes)\"."
+      },
+      {
+        "id": "d-6",
+        "fieldName": "Unit Sale Price (USP)",
+        "ruleReference": "Rule 6(11)",
+        "extractedValue": "₹ 0.27/g",
+        "status": "passed",
+        "confidence": 0.95,
+        "legalNote": "Unit Sale Price declared on package as per 2021/2022 PCR amendment."
+      },
+      {
+        "id": "d-7",
+        "fieldName": "Country of Origin",
+        "ruleReference": "Rule 6(10)",
+        "extractedValue": "India",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Mandatory origin declaration verified."
+      },
+      {
+        "id": "d-8",
+        "fieldName": "Consumer Care / Grievance Redressal",
+        "ruleReference": "Rule 6(1)(g)",
+        "extractedValue": "Executive, Consumer Care Cell, 1-800-4254449 / 1-800-30004530 (Toll Free), Britannia Industries Ltd.",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Contact helpline, email, or postal address present."
+      },
+      {
+        "id": "d-9",
+        "fieldName": "Batch / Lot Identification Number",
+        "ruleReference": "Rule 6(1) & FSSAI/PCR Marking",
+        "extractedValue": "0962695",
+        "status": "passed",
+        "confidence": 0.97,
+        "legalNote": "Batch / Lot identification code recorded for batch trace."
+      }
+    ],
+    "findings": [
+      {
+        "id": "f-1",
+        "ruleNumber": "Rule 6(1)(c)",
+        "ruleTitle": "Non-Compliance with Net Quantity in Standard Metric Units",
+        "severity": "major_violation",
+        "evidence": "Extracted value: \"Not Found on Label\". Net quantity declaration missing or unclear.",
+        "explanation": "The package violates statutory mandate under Rule 6(1)(c).",
+        "legalClause": "Section 36(1) & Section 36(2) of Legal Metrology Act, 2009",
+        "penaltySection": "Compounding fine up to ₹25,000 for first offense",
+        "recommendedAction": "Issue Statutory Notice under Section 36(1). Seize sample if non-rectified.",
+        "status": "failed"
+      },
+      {
+        "id": "f-2",
+        "ruleNumber": "Rule 6(1)(e)",
+        "ruleTitle": "Non-Compliance with Maximum Retail Price (MRP)",
+        "severity": "major_violation",
+        "evidence": "Extracted value: \"30.00\". Missing mandatory statutory phrase \"(inclusive of all taxes)\".",
+        "explanation": "The package violates statutory mandate under Rule 6(1)(e).",
+        "legalClause": "Section 36(1) & Section 36(2) of Legal Metrology Act, 2009",
+        "penaltySection": "Compounding fine up to ₹25,000 for first offense",
+        "recommendedAction": "Issue Statutory Notice under Section 36(1). Seize sample if non-rectified.",
+        "status": "failed"
+      }
+    ],
+    "images": [
+      {
+        "id": "img_1790188272011_0",
+        "file": {},
+        "previewUrl": "blob:http://localhost:3000/3aaeffac-c814-48a7-883a-504a901aaccd",
+        "labelType": "front",
+        "timestamp": "00:01",
+        "source": "upload"
+      }
+    ],
+    "remarks": "Thermal printing matrix clearly declares MRP (30.00), USP (₹ 0.27/g), PKD (09/06/26), USE BY (08/10/26), and LOT No. (0962695). Full manufacturer address and net quantity are cropped or located on other packaging panels.",
+    "actionTaken": "Inspect full package to verify complete manufacturer address and primary net quantity declaration on the Principal Display Panel (PDP).",
+    "batchNumber": "0962695",
+    "lotSize": 500,
+    "samplesTested": 32,
+    "sampleSufficient": true,
+    "statutorySamplingNote": "Rule requires testing a sample size of at least 20 packets before generating the legal report."
+  },
+  {
+    "id": "ins_1790188144916",
+    "memoNumber": "LM/ENF/2026/5101",
+    "createdAt": "2026-09-23T18:29:57.308Z",
+    "commodityName": "READY-TO-EAT SAVOURIES (PROPRIETARY FOOD)",
+    "category": "Food & Beverages",
+    "packageType": "Pouch / Sachet",
+    "brand": "Haldiram's",
+    "manufacturer": "HALDIRAM SNACKS FOOD PRIVATE LIMITED",
+    "mfgAddress": "Village Kherki Daula, Delhi - Jaipur Highway, Gurugram - 122001, Haryana, India",
+    "countryOfOrigin": "India",
+    "netQuantity": "40g",
+    "mrp": "₹ 10/- (INCL. OF ALL TAXES)",
+    "unitSalePrice": "Rs.0.25/g",
+    "mfgDate": "06/08/26",
+    "expiryDate": "03/12/26",
+    "consumerCare": "CONSUMER SERVICE MANAGER, HALDIRAM SNACKS FOOD PRIVATE LIMITED, SECTOR-62, NOIDA-201307, GAUTAM BUDH NAGAR, (UP), INDIA, Ph: 0120-2490286, Email: CUSTOMERCARE@HALDIRAM.COM, Web: WWW.HALDIRAM.COM",
+    "status": "COMPLIANT",
+    "score": 95,
+    "officerName": "Insp. Aniket Verma",
+    "officerDesignation": "Senior Legal Metrology Officer",
+    "inspectionLocation": "Connaught Place, New Delhi",
+    "storeName": "Metro Supermarket & Mart",
+    "storeAddress": "Connaught Place, New Delhi",
+    "declarations": [
+      {
+        "id": "d-1",
+        "fieldName": "Name and Address of Manufacturer",
+        "ruleReference": "Rule 6(1)(a)",
+        "extractedValue": "HALDIRAM SNACKS FOOD PRIVATE LIMITED, Village Kherki Daula, Delhi - Jaipur Highway, Gurugram - 122001, Haryana, India",
+        "status": "passed",
+        "confidence": 0.98,
+        "legalNote": "Complete postal address with PIN code verified."
+      },
+      {
+        "id": "d-2",
+        "fieldName": "Generic Commodity Name",
+        "ruleReference": "Rule 6(1)(b)",
+        "extractedValue": "READY-TO-EAT SAVOURIES (PROPRIETARY FOOD)",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Clearly identified on package label."
+      },
+      {
+        "id": "d-3",
+        "fieldName": "Net Quantity in Standard Metric Units",
+        "ruleReference": "Rule 6(1)(c)",
+        "extractedValue": "40g",
+        "status": "passed",
+        "confidence": 0.97,
+        "fontHeightMm": 4.2,
+        "minRequiredFontMm": 4,
+        "legalNote": "Standard metric unit used."
+      },
+      {
+        "id": "d-4",
+        "fieldName": "Month and Year of Manufacture / Packing",
+        "ruleReference": "Rule 6(1)(d)",
+        "extractedValue": "Mfg: 06/08/26 | Expiry: 03/12/26",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Standard date format compliant with PCR 2011."
+      },
+      {
+        "id": "d-5",
+        "fieldName": "Maximum Retail Price (MRP)",
+        "ruleReference": "Rule 6(1)(e)",
+        "extractedValue": "₹ 10/- (INCL. OF ALL TAXES)",
+        "status": "passed",
+        "confidence": 0.98,
+        "legalNote": "Mandatory phrase \"inclusive of all taxes\" verified."
+      },
+      {
+        "id": "d-6",
+        "fieldName": "Unit Sale Price (USP)",
+        "ruleReference": "Rule 6(11)",
+        "extractedValue": "Rs.0.25/g",
+        "status": "passed",
+        "confidence": 0.95,
+        "legalNote": "Unit Sale Price declared on package as per 2021/2022 PCR amendment."
+      },
+      {
+        "id": "d-7",
+        "fieldName": "Country of Origin",
+        "ruleReference": "Rule 6(10)",
+        "extractedValue": "India",
+        "status": "passed",
+        "confidence": 0.99,
+        "legalNote": "Mandatory origin declaration verified."
+      },
+      {
+        "id": "d-8",
+        "fieldName": "Consumer Care / Grievance Redressal",
+        "ruleReference": "Rule 6(1)(g)",
+        "extractedValue": "CONSUMER SERVICE MANAGER, HALDIRAM SNACKS FOOD PRIVATE LIMITED, SECTOR-62, NOIDA-201307, GAUTAM BUDH NAGAR, (UP), INDIA, Ph: 0120-2490286, Email: CUSTOMERCARE@HALDIRAM.COM, Web: WWW.HALDIRAM.COM",
+        "status": "passed",
+        "confidence": 0.96,
+        "legalNote": "Contact helpline, email, or postal address present."
+      },
+      {
+        "id": "d-9",
+        "fieldName": "Batch / Lot Identification Number",
+        "ruleReference": "Rule 6(1) & FSSAI/PCR Marking",
+        "extractedValue": "2/DAFH06",
+        "status": "passed",
+        "confidence": 0.97,
+        "legalNote": "Batch / Lot identification code recorded for batch trace."
+      }
+    ],
+    "findings": [
+      {
+        "id": "f-1",
+        "ruleNumber": "Rule 6(1)(a)-(g)",
+        "ruleTitle": "Mandatory Statutory Declarations Compliance",
+        "severity": "compliant",
+        "evidence": "All 8 mandatory declarations found compliant with Legal Metrology (Packaged Commodities) Rules, 2011.",
+        "explanation": "No missing mandatory fields, correct font sizing, and valid Unit Sale Price declaration.",
+        "legalClause": "Section 36(1) of Legal Metrology Act, 2009",
+        "penaltySection": "None (Fully Compliant)",
+        "recommendedAction": "Issue Certificate of Compliance.",
+        "status": "passed"
+      }
+    ],
+    "images": [
+      {
+        "id": "img_1790188162548_0",
+        "file": {},
+        "previewUrl": "blob:http://localhost:3000/acd0e69c-5da0-4a27-9383-523a56ee6867",
+        "labelType": "front",
+        "timestamp": "23:59",
+        "source": "upload"
+      }
+    ],
+    "remarks": "All statutory declarations including commodity name, net quantity, MRP, unit sale price, date of manufacture, use by date, batch number, country of origin, manufacturer details, and consumer care address are present and clearly legible in accordance with Rule 6 of PCR 2011.",
+    "actionTaken": "Package is fully compliant with Legal Metrology (Packaged Commodities) Rules, 2011. No enforcement action required.",
+    "batchNumber": "2/DAFH06",
+    "lotSize": 500,
+    "samplesTested": 32,
+    "sampleSufficient": true,
+    "statutorySamplingNote": "Rule requires testing a sample size of at least 20 packets before generating the legal report."
+  },
+  {
     "id": "ins_1789885829602",
     "memoNumber": "LM/ENF/2026/9424",
     "createdAt": "2026-09-20T06:30:29.602Z",
