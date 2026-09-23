@@ -30,6 +30,21 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
   const [isFlashOn, setIsFlashOn] = useState<boolean>(false);
   const [hasMultipleCameras, setHasMultipleCameras] = useState<boolean>(false);
   const [isInitializing, setIsInitializing] = useState<boolean>(false);
+  const nativeCameraInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Handle native camera capture on mobile/devices
+  const handleNativeCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const file = files[0];
+    const url = URL.createObjectURL(file);
+    setCapturedBlob({ blob: file, url });
+    stopCameraTracks();
+    setErrorMessage(null);
+    if (nativeCameraInputRef.current) {
+      nativeCameraInputRef.current.value = '';
+    }
+  };
 
   // Stop camera tracks cleanly
   const stopCameraTracks = useCallback(() => {
@@ -268,8 +283,17 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
         id="camera-capture-modal-content"
         className="relative w-full max-w-2xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
       >
-        {/* Hidden working canvas */}
+        {/* Hidden working canvas & native camera file input */}
         <canvas ref={canvasRef} className="hidden" />
+        <input
+          ref={nativeCameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onChange={handleNativeCapture}
+          className="hidden"
+          aria-label="Snap photo with device camera"
+        />
 
         {/* Modal Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-900/90 z-10">
@@ -342,7 +366,16 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
                 <p className="text-slate-300 text-xs sm:text-sm mt-1.5 leading-relaxed">{errorMessage}</p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-2 pt-2 justify-center">
+              <div className="flex flex-col sm:flex-row gap-2 pt-2 justify-center flex-wrap">
+                <button
+                  id="btn-camera-native-snap"
+                  type="button"
+                  onClick={() => nativeCameraInputRef.current?.click()}
+                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors flex items-center justify-center space-x-2 shadow-lg shadow-emerald-600/30"
+                >
+                  <Camera className="w-4 h-4" />
+                  <span>Snap with Phone Camera</span>
+                </button>
                 <button
                   id="btn-camera-retry"
                   type="button"
@@ -363,7 +396,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
                     className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium rounded-xl transition-colors flex items-center justify-center space-x-2 border border-slate-700"
                   >
                     <ImageIcon className="w-4 h-4" />
-                    <span>Upload Photo Instead</span>
+                    <span>Upload Photo</span>
                   </button>
                 )}
               </div>
