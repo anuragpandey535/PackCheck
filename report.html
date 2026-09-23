@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PackCheck Technical Summary Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 16mm 14mm;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.5;
+      font-size: 11pt;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      border: 1px solid #1e293b;
+    }
+    .header-banner h1 {
+      margin: 0 0 6px 0;
+      font-size: 22pt;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #38bdf8;
+    }
+    .header-banner p {
+      margin: 0;
+      font-size: 11pt;
+      color: #e2e8f0;
+    }
+    .meta-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 9pt;
+      color: #94a3b8;
+    }
+    h2 {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #0f172a;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1e40af;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+    p, ul, ol {
+      margin: 0 0 10px 0;
+      font-size: 10pt;
+    }
+    ul {
+      padding-left: 18px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px 0;
+      font-size: 9pt;
+      page-break-inside: avoid;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+    }
+    td {
+      padding: 7px 10px;
+      border: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      font-size: 8pt;
+      font-weight: 600;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+    .code-block {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      margin: 10px 0 16px 0;
+      page-break-inside: avoid;
+      white-space: pre-wrap;
+    }
+    .diagram-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 8pt;
+      line-height: 1.35;
+      margin: 12px 0;
+      page-break-inside: avoid;
+      color: #334155;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 12px 0;
+    }
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 9.5pt;
+      color: #1e3a8a;
+      margin-bottom: 4px;
+    }
+    .footer-note {
+      margin-top: 30px;
+      padding-top: 10px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 8pt;
+      color: #64748b;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-banner">
+    <h1>PackCheck ⚖️🔍</h1>
+    <p>AI-Powered Legal Metrology (PCR 2011) Statutory Inspection & Enforcement Platform</p>
+    <div class="meta-bar">
+      <span><strong>Document:</strong> Technical Architecture & Stack Specification</span>
+      <span><strong>Standard:</strong> Act 2009 & PCR 2011 / 2022 Amendment</span>
+      <span><strong>Version:</strong> v2.4.0 Production</span>
+    </div>
+  </div>
+
+  <h2>1. 🏛️ Executive Summary & Legal Framework</h2>
+  <p>
+    <strong>PackCheck</strong> is an automated optical inspection and statutory auditing system designed for Legal Metrology Officers, Food & Civil Supplies Departments, and compliance auditors in India. It automatically verifies packaged goods against <strong>The Legal Metrology Act, 2009</strong> and the <strong>Legal Metrology (Packaged Commodities) Rules, 2011 (PCR 2011)</strong>.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 22%;">Statutory Rule</th>
+        <th style="width: 48%;">Legal Requirement & Threshold</th>
+        <th style="width: 30%;">PackCheck Automated Verification</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Rule 6(1)(a)</strong></td>
+        <td>Name & Complete Postal Address of Manufacturer / Packer / Importer with valid PIN code.</td>
+        <td>Extracts full address & checks PIN code presence.</td>
+      </tr>
+      <tr>
+        <td><strong>Rule 6(1)(b)</strong></td>
+        <td>Generic or Common Commodity Name displayed prominently on Principal Display Panel (PDP).</td>
+        <td>Validates generic commodity classification.</td>
+      </tr>
+      <tr>
+        <td><strong>Rule 6(1)(c) & Rule 7</strong></td>
+        <td>Net quantity in SI metric units (g, kg, ml, l, N) & minimum numeral font heights (Table I).</td>
+        <td>Checks metric symbol syntax and font height vs PDP area.</td>
+      </tr>
+      <tr>
+        <td><strong>Rule 6(1)(d)</strong></td>
+        <td>Month & Year of Manufacture / Pre-packing (e.g. MM/YYYY or PKD: MM/YY).</td>
+        <td>Extracts manufacturing & packaging timelines.</td>
+      </tr>
+      <tr>
+        <td><strong>Rule 6(1)(e)</strong></td>
+        <td>Maximum Retail Price (MRP) in Indian Rupees inclusive of all taxes.</td>
+        <td>Verifies currency symbol and mandatory tax phrasing.</td>
+      </tr>
+      <tr>
+        <td><strong>Rule 6(11) (2022 Mandate)</strong></td>
+        <td>Unit Sale Price (USP) declared in ₹ per gram/ml/piece for packages &gt; standard threshold.</td>
+        <td>Enforces USP presence (e.g., Rs. 0.25 / g).</td>
+      </tr>
+      <tr>
+        <td><strong>Rule 6(10)</strong></td>
+        <td>Country of Origin clearly declared on imported packaged commodities.</td>
+        <td>Flags missing origin on imported products.</td>
+      </tr>
+      <tr>
+        <td><strong>Rule 6(1)(g)</strong></td>
+        <td>Consumer Grievance Redressal (Name, Postal Address, Phone Helpline, Email).</td>
+        <td>Verifies multi-channel grievance contact information.</td>
+      </tr>
+      <tr>
+        <td><strong>Fifth Schedule (PCR 2011)</strong></td>
+        <td>Mandatory statistical sample sizes based on total stock lot (20, 50, or 80 packets).</td>
+        <td>Calculates statutory sample size before notice generation.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2. 🏗️ System Architecture & Data Flow</h2>
+  <div class="diagram-box">
+[Mobile Camera / Upload] ──> [Canvas Downscaler (1400px JPEG)] ──> [React 19 Client State]
+                                                                        │
+                                                      POST /api/analyze-package (JSON)
+                                                                        ▼
+                                                   [Express 4.21 / Node.js 22 Runtime]
+                                                                        │
+                                                  @google/genai SDK (Cascade Model Pipeline)
+                                                                        ▼
+                                                   [Google Gemini 2.5 / 2.0 Multimodal OCR]
+                                                                        │
+                                                       Structured Legal Metrology JSON
+                                                                        ▼
+                                                   [Inspection History & Batch Segregation]
+                                                                        │
+                                                       ├── Browser localStorage (Offline)
+                                                       └── Server JSON Store (data/inspections)
+  </div>
+
+  <h2>3. 💻 Full Technology Stack</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">Frontend Framework & UI</div>
+      <ul>
+        <li><strong>React 19.0.1:</strong> State & modern concurrent rendering</li>
+        <li><strong>TypeScript 5.8.2:</strong> Strict type-safety models</li>
+        <li><strong>Tailwind CSS v4:</strong> Hardware-accelerated UI design</li>
+        <li><strong>Lucide React 0.546:</strong> Statutory & compliance iconography</li>
+        <li><strong>Recharts 3.10:</strong> Defect distribution & batch analytics</li>
+        <li><strong>Vite 6.2:</strong> Ultra-fast build & HMR toolchain</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Backend, Runtime & AI Engine</div>
+      <ul>
+        <li><strong>Node.js 22 LTS / Express 4.21:</strong> High-throughput API server</li>
+        <li><strong>@google/genai 2.4.0:</strong> Multimodal AI Vision SDK</li>
+        <li><strong>Google Gemini 2.5 Flash / Pro:</strong> Thermal coding & inkjet OCR</li>
+        <li><strong>Vercel Serverless (api/index.ts):</strong> Auto-scaling cloud functions</li>
+        <li><strong>TSX & ESBuild:</strong> Live TypeScript execution & bundling</li>
+        <li><strong>Dual-Layer Storage:</strong> localStorage + JSON filesystem store</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>4. 🔌 API Specifications & Schemas</h2>
+  <h3>POST /api/analyze-package</h3>
+  <p>Accepts base64 encoded package photography, invokes multimodal vision inference, and returns structured declarations.</p>
+  <div class="code-block">// Response Payload Schema
+{
+  "success": true,
+  "source": "gemini_vision_ocr",
+  "data": {
+    "commodityName": "Bhujia Sev / Savoury Snack",
+    "brand": "Haldiram's",
+    "manufacturer": "HALDIRAM SNACKS FOOD PRIVATE LIMITED",
+    "mfgAddress": "Village Kherki Daula, Delhi-Jaipur Highway, Gurugram - 122001",
+    "countryOfOrigin": "India",
+    "netQuantity": "40g",
+    "mrp": "₹ 10/- (INCL. OF ALL TAXES)",
+    "unitSalePrice": "Rs.0.25/g",
+    "mfgDate": "06/08/26",
+    "expiryDate": "06/12/26",
+    "batchNumber": "B.No. 24A",
+    "consumerCare": "customercare@haldiram.com | 1800-11-2233",
+    "status": "COMPLIANT",
+    "score": 96,
+    "officerRemarks": "All 8 statutory declarations verified as per Rule 6 PCR 2011.",
+    "actionTaken": "Certificate of compliance verified."
+  }
+}</div>
+
+  <h2>5. 🎯 Core Functional Modules</h2>
+  <ul>
+    <li><strong>Batch Identification & Segregation:</strong> Scans thermal inkjet stamps on fin seals, crimps, and white date boxes to isolate <code>B.No.</code> / <code>BN</code> codes and organize stock into distinct batch cards with batch-level compliance scoring.</li>
+    <li><strong>Fifth Schedule Statutory Sampling Calculator:</strong> Automatically enforces mandatory sample minimums (100–500 pkts &rarr; 20 units, 501–3200 pkts &rarr; 50 units, &gt;3200 pkts &rarr; 80 units).</li>
+    <li><strong>Official Legal Memorandum Generator:</strong> Produces formal print-ready inspection memorandums citing Section 36(1) and Rule 32 compounding options with isolated print stylesheet.</li>
+    <li><strong>Dual-Layer Persistence Engine:</strong> Instant offline browser storage synchronized with backend disk storage (<code>data/inspections.json</code>).</li>
+  </ul>
+
+  <h2>6. 🚀 Deployment Options</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Target Environment</th>
+        <th>Architecture</th>
+        <th>Primary Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Local Development</strong></td>
+        <td><code>http://localhost:3000</code></td>
+        <td>Full-Stack Node.js + Express + Vite</td>
+        <td>Local field inspection & offline audits</td>
+      </tr>
+      <tr>
+        <td><strong>Vercel</strong></td>
+        <td><code>https://[app].vercel.app</code></td>
+        <td>Serverless Functions (<code>api/index.ts</code>)</td>
+        <td>Zero-maintenance production deployment</td>
+      </tr>
+      <tr>
+        <td><strong>Render / Cloud Run</strong></td>
+        <td><code>https://[app].onrender.com</code></td>
+        <td>24/7 Containerized Node.js Service</td>
+        <td>Centralized department team server</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-note">
+    PackCheck Legal Metrology Compliance System • Generated on September 23, 2026 • Confidential & Proprietary
+  </div>
+
+</body>
+</html>
