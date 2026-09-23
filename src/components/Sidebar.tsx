@@ -28,6 +28,8 @@ interface SidebarProps {
   isMobileOpen: boolean;
   onCloseMobile: () => void;
   language: LanguageCode;
+  inspectionsCount?: number;
+  violationsCount?: number;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -38,6 +40,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isMobileOpen,
   onCloseMobile,
   language,
+  inspectionsCount,
+  violationsCount,
 }) => {
   const t = useTranslation(language);
 
@@ -63,14 +67,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       title: t('inspections_section'),
       items: [
-        { id: 'new-inspection', label: t('new_inspection'), icon: Camera },
-        { id: 'history', label: t('inspection_history'), icon: History },
+        { id: 'new-inspection', label: t('new_inspection'), icon: Camera, badge: 'AI Scan' },
+        {
+          id: 'history',
+          label: t('inspection_history'),
+          icon: History,
+          badge: typeof inspectionsCount === 'number' ? `${inspectionsCount}` : undefined,
+        },
       ],
     },
     {
       title: t('compliance_section'),
       items: [
-        { id: 'compliance', label: t('compliance_results'), icon: ShieldCheck },
+        {
+          id: 'compliance',
+          label: t('compliance_results'),
+          icon: ShieldCheck,
+          badge: typeof violationsCount === 'number' && violationsCount > 0 ? `${violationsCount} Violations` : undefined,
+        },
         { id: 'rules', label: t('rule_management'), icon: BookOpen },
       ],
     },

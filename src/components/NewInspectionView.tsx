@@ -43,6 +43,7 @@ import confetti from 'canvas-confetti';
 
 interface NewInspectionViewProps {
   onSaveInspection: (record: InspectionRecord) => void;
+  onNavigateToHistory?: () => void;
   onCancel: () => void;
   language: LanguageCode;
   onShowToast: (type: 'success' | 'warning' | 'error' | 'info', title: string, message: string) => void;
@@ -51,6 +52,7 @@ interface NewInspectionViewProps {
 
 export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
   onSaveInspection,
+  onNavigateToHistory,
   onCancel,
   language,
   onShowToast,
@@ -58,6 +60,12 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
 }) => {
   const t = useTranslation(language);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Persistent inspection memo identification
+  const [currentRecordId, setCurrentRecordId] = useState<string>(() => `ins_${Date.now()}`);
+  const [currentMemoNumber, setCurrentMemoNumber] = useState<string>(
+    () => `LM/ENF/2026/${Math.floor(1000 + Math.random() * 9000)}`
+  );
 
   // Stepper state: 1 (Capture), 2 (AI Extraction), 3 (Verification), 4 (Compliance), 5 (Report)
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -198,14 +206,15 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
     onShowToast('info', 'Sample Package Loaded', 'Sample package images and store details loaded for testing.');
   };
 
-// Helper to downscale and compress images to prevent hitting cloud payload limits
+// Helper to downscale and compress images with high quality for sharp OCR of tiny statutory fonts
 function compressImageToBase64(blob: Blob | File): Promise<{ data: string; mimeType: string }> {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        const MAX_DIM = 1400;
+        // High 2400px resolution ensures tiny dot-matrix inkjet batch numbers and 6-digit PIN codes remain sharp
+        const MAX_DIM = 2400;
         let width = img.width;
         let height = img.height;
 
@@ -226,8 +235,10 @@ function compressImageToBase64(blob: Blob | File): Promise<{ data: string; mimeT
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         if (ctx) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
           ctx.drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
           const base64 = dataUrl.split(',')[1] || '';
           resolve({ data: base64, mimeType: 'image/jpeg' });
           return;
@@ -246,6 +257,82 @@ function compressImageToBase64(blob: Blob | File): Promise<{ data: string; mimeT
   });
 }
 
+  // Build full InspectionRecord from current state
+  const buildCurrentRecord = (overrides?: Partial<InspectionRecord>): InspectionRecord => {
+    return {
+      id: currentRecordId,
+      memoNumber: currentMemoNumber,
+      createdAt: new Date().toISOString(),
+      commodityName: commodityName || 'Pre-Packaged Commodity',
+      category,
+      packageType,
+      brand,
+      manufacturer,
+      mfgAddress,
+      countryOfOrigin: countryOfOrigin || 'India',
+      netQuantity,
+      mrp,
+      unitSalePrice,
+      mfgDate,
+      expiryDate,
+      consumerCare,
+      status: complianceStatus,
+      score: complianceScore,
+      officerName: 'Insp. Aniket Verma',
+      officerDesignation: 'Senior Legal Metrology Officer',
+      inspectionLocation,
+      storeName,
+      storeAddress: inspectionLocation,
+      declarations,
+      findings,
+      images,
+      remarks: officerRemarks,
+      actionTaken,
+      batchNumber: batchNumber.trim() || 'UNASSIGNED',
+      lotSize: parseInt(lotSize, 10) || 0,
+      samplesTested,
+      sampleSufficient: isSampleSufficient,
+      statutorySamplingNote: samplingRule.note,
+      ...overrides,
+    };
+  };
+
+  // Direct Save & Navigate to Inspection History
+  const handleSaveAndGoToHistory = () => {
+    const record = buildCurrentRecord();
+    setFinalRecord(record);
+    onSaveInspection(record);
+    onShowToast('success', 'Inspection Saved', `Memo #${record.memoNumber} saved to inspection registry.`);
+    if (onNavigateToHistory) {
+      onNavigateToHistory();
+    }
+  };
+
+  // Reset form to start another inspection
+  const handleResetForNewInspection = () => {
+    setCurrentRecordId(`ins_${Date.now()}`);
+    setCurrentMemoNumber(`LM/ENF/2026/${Math.floor(1000 + Math.random() * 9000)}`);
+    setImages([]);
+    setCommodityName('');
+    setBrand('');
+    setManufacturer('');
+    setMfgAddress('');
+    setNetQuantity('');
+    setMrp('');
+    setUnitSalePrice('');
+    setMfgDate('');
+    setExpiryDate('');
+    setBatchNumber('');
+    setConsumerCare('');
+    setDeclarations([]);
+    setFindings([]);
+    setComplianceScore(90);
+    setComplianceStatus('COMPLIANT');
+    setFinalRecord(null);
+    setCurrentStep(1);
+    onShowToast('info', 'Ready for New Inspection', 'Form cleared for next package audit.');
+  };
+
   // Start AI analysis pipeline
   const handleStartAnalysis = async () => {
     if (images.length === 0) {
@@ -262,7 +349,7 @@ function compressImageToBase64(blob: Blob | File): Promise<{ data: string; mimeT
       await new Promise((r) => setTimeout(r, 600));
       setAnalysisStep(2);
 
-      // Convert and compress images for API
+      // Convert and compress images for API with high visual fidelity
       const base64Images: { data: string; mimeType: string }[] = await Promise.all(
         images.map(async (img) => {
           if (img.file) {
@@ -317,20 +404,69 @@ function compressImageToBase64(blob: Blob | File): Promise<{ data: string; mimeT
 
       // If backend API is not reachable (e.g. static hosting on Netlify), execute direct client-side Gemini AI Vision
       if (!analysisResult || !analysisResult.data) {
-        const clientApiKey = localStorage.getItem('packcheck_gemini_api_key') || (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
+        const clientApiKey =
+          localStorage.getItem('packcheck_gemini_api_key') ||
+          (import.meta as any).env?.VITE_GEMINI_API_KEY ||
+          '';
+
         if (clientApiKey) {
-          const prompt = `You are a certified Legal Metrology Enforcement Officer and precise OCR scanner in India specializing in PCR 2011.
-Scan the package and extract: commodityName, brand, manufacturer, mfgAddress, countryOfOrigin, netQuantity, mrp, unitSalePrice, mfgDate, expiryDate, batchNumber (exact B.No. or BN), consumerCare, status ("COMPLIANT"|"REVIEW_REQUIRED"|"NON_COMPLIANT"), score (number), officerRemarks, actionTaken.
-Return ONLY valid JSON matching this schema.`;
+          const prompt = `You are a certified Legal Metrology Enforcement Officer and expert OCR scanner in India specializing in The Legal Metrology Act, 2009 and Legal Metrology (Packaged Commodities) Rules, 2011 (PCR 2011).
 
-          const imageParts = base64Images.filter((img) => img.data.length > 0).map((img) => ({
-            inline_data: {
-              mime_type: img.mimeType || 'image/jpeg',
-              data: img.data,
-            },
-          }));
+CRITICAL ACCURACY INSTRUCTIONS:
+Examine every part of the package image carefully (including front Principal Display Panel, back declaration panel, ingredients text, white rectangular coding stamp box, dot-matrix inkjet markings, vertical fin seal, crimps, and barcode area).
+Extract the EXACT text printed on the packaging:
 
-          const candidateModels = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+1. Commodity Name: Generic or common name of the product (e.g. Wafers, Coated Wafer, Milk Chocolate, Extruded Savoury Snack, Potato Chips, Namkeen, Biscuits, Honey).
+2. Brand: Brand name or trademark (e.g. Nestle, Cadbury, Haldiram's, Lay's, Balaji, Britannia, Parle, Amul, Bikaji, Sunfeast).
+3. Manufacturer: Full registered company name of manufacturer, packer, or importer.
+4. Manufacturer Address: Complete postal address with state, district, and 6-digit PIN code.
+5. Country of Origin: Country of manufacture (e.g. India).
+6. Net Quantity: Quantity in metric units (e.g. 18.5 g, 40 g, 100 g, 500 g, 250 ml, 1 L, 10 N).
+7. MRP: Maximum Retail Price text (must include ₹ symbol and "(incl. of all taxes)" or "inclusive of all taxes").
+8. Unit Sale Price (USP): Per gram/ml/piece rate (e.g. Rs. 0.25 / g, Rs. 0.54 / g).
+9. Mfg Date: Month and year of manufacture or packaging (e.g. "08/2026", "06/08/2026", "PKD: 08/26").
+10. Expiry Date: Best before date, use by date, or expiry period (e.g. "06/08/26", "USE BY: 06/12/26", "Best Before 9 Months").
+11. Batch Number / Lot No. (B.No. / BN):
+- Search the white thermal coding panel, dot-matrix inkjet stamp, crimp seal, and back vertical fin seal for "B.No.", "B.NO.", "BN:", "BN", "B/N:", "Batch:", "LOT NO", "Lot:", "LOT", "B#".
+- Extract the EXACT value printed after the marker (e.g., "B.No. 24A", "BN: 4028", "LOT-98", "B.No. 06/08/26", "K24").
+12. Consumer Care: Customer care name, phone helpline, email ID, and address.
+
+Return ONLY a valid JSON object matching this schema without markdown fences:
+{
+  "commodityName": "string",
+  "brand": "string",
+  "manufacturer": "string",
+  "mfgAddress": "string",
+  "countryOfOrigin": "string",
+  "netQuantity": "string",
+  "mrp": "string",
+  "unitSalePrice": "string",
+  "mfgDate": "string",
+  "expiryDate": "string",
+  "batchNumber": "string",
+  "consumerCare": "string",
+  "status": "COMPLIANT" | "REVIEW_REQUIRED" | "NON_COMPLIANT",
+  "score": number,
+  "officerRemarks": "string",
+  "actionTaken": "string"
+}`;
+
+          const imageParts = base64Images
+            .filter((img) => img.data.length > 0)
+            .map((img) => ({
+              inline_data: {
+                mime_type: img.mimeType || 'image/jpeg',
+                data: img.data,
+              },
+            }));
+
+          const candidateModels = [
+            'gemini-2.5-flash',
+            'gemini-2.0-flash',
+            'gemini-1.5-flash',
+            'gemini-2.5-pro',
+          ];
+
           for (const model of candidateModels) {
             try {
               const directRes = await fetch(
@@ -395,9 +531,34 @@ Return ONLY valid JSON matching this schema.`;
       setAnalysisStep(5); // Finalizing
       await new Promise((r) => setTimeout(r, 600));
 
-      // Parse or formulate result
+      // Parse and post-process result
       const resData = analysisResult?.data || {};
       console.log('AI Extraction Response from Gemini:', resData);
+
+      // Smart Batch Number post-processing
+      let detectedBatch = resData.batchNumber ? resData.batchNumber.trim() : (batchNumber ? batchNumber.trim() : '');
+      if (!detectedBatch) {
+        const fullDump = JSON.stringify(resData);
+        const bMatch = fullDump.match(/(?:B\.?\s*No\.?|B\.?N\.?|B\/N|Batch(?:\s*No\.?)?|Lot(?:\s*No\.?)?|B#)[\s:\.\-]*([A-Za-z0-9\/\.\-]+)/i);
+        if (bMatch && bMatch[1]) {
+          detectedBatch = bMatch[1].trim();
+        }
+      }
+
+      // Smart USP auto-calculation if missing but MRP and Net Qty exist
+      let detectedUsp = resData.unitSalePrice !== undefined ? resData.unitSalePrice : '';
+      const detectedMrp = resData.mrp !== undefined ? resData.mrp : '';
+      const detectedNetQty = resData.netQuantity !== undefined ? resData.netQuantity : '';
+
+      if (!detectedUsp && detectedMrp && detectedNetQty) {
+        const numMrp = parseFloat(detectedMrp.replace(/[^0-9.]/g, ''));
+        const numQty = parseFloat(detectedNetQty.replace(/[^0-9.]/g, ''));
+        if (!isNaN(numMrp) && !isNaN(numQty) && numQty > 0) {
+          const unitRate = (numMrp / numQty).toFixed(2);
+          const unit = /kg|l|litre/i.test(detectedNetQty) ? 'kg' : /ml/i.test(detectedNetQty) ? 'ml' : 'g';
+          detectedUsp = `₹ ${unitRate} / ${unit}`;
+        }
+      }
 
       const detectedCommodity =
         resData.commodityName !== undefined && resData.commodityName !== ''
@@ -406,13 +567,11 @@ Return ONLY valid JSON matching this schema.`;
       const detectedBrand = resData.brand !== undefined ? resData.brand : '';
       const detectedMfg = resData.manufacturer !== undefined ? resData.manufacturer : '';
       const detectedMfgAddr = resData.mfgAddress !== undefined ? resData.mfgAddress : '';
-      const detectedOrigin = resData.countryOfOrigin !== undefined ? resData.countryOfOrigin : '';
-      const detectedNetQty = resData.netQuantity !== undefined ? resData.netQuantity : '';
-      const detectedMrp = resData.mrp !== undefined ? resData.mrp : '';
-      const detectedUsp = resData.unitSalePrice !== undefined ? resData.unitSalePrice : '';
+      const detectedOrigin = resData.countryOfOrigin !== undefined && resData.countryOfOrigin !== ''
+        ? resData.countryOfOrigin
+        : 'India';
       const detectedMfgDate = resData.mfgDate !== undefined ? resData.mfgDate : '';
       const detectedExpDate = resData.expiryDate !== undefined ? resData.expiryDate : '';
-      const detectedBatch = resData.batchNumber ? resData.batchNumber.trim() : (batchNumber ? batchNumber.trim() : '');
       const detectedCare = resData.consumerCare !== undefined ? resData.consumerCare : '';
 
       setCommodityName(detectedCommodity);
@@ -631,9 +790,34 @@ Return ONLY valid JSON matching this schema.`;
       setComplianceScore(score);
       setComplianceStatus(status);
 
+      // Auto-stage & preserve inspection record immediately in history
+      const stagedRecord = buildCurrentRecord({
+        commodityName: detectedCommodity,
+        brand: detectedBrand,
+        manufacturer: detectedMfg,
+        mfgAddress: detectedMfgAddr,
+        countryOfOrigin: detectedOrigin,
+        netQuantity: detectedNetQty,
+        mrp: detectedMrp,
+        unitSalePrice: detectedUsp,
+        mfgDate: detectedMfgDate,
+        expiryDate: detectedExpDate,
+        batchNumber: detectedBatch || 'UNASSIGNED',
+        consumerCare: detectedCare,
+        declarations: extractedDeclarations,
+        findings: extractedFindings,
+        score,
+        status,
+        remarks: resData.officerRemarks || officerRemarks,
+        actionTaken: resData.actionTaken || actionTaken,
+      });
+
+      setFinalRecord(stagedRecord);
+      onSaveInspection(stagedRecord);
+
       setIsAnalyzing(false);
       setCurrentStep(3); // Step 3: Verification
-      onShowToast('success', 'Extraction Complete', 'Package declarations extracted and audited against PCR 2011.');
+      onShowToast('success', 'Extraction Complete', 'Package declarations extracted and saved to inspection registry.');
     } catch (err) {
       console.error('Error during extraction analysis:', err);
       setIsAnalyzing(false);
@@ -644,6 +828,11 @@ Return ONLY valid JSON matching this schema.`;
 
   // Proceed from Step 3 (Verification) to Step 4 (Compliance Results)
   const handleProceedToCompliance = () => {
+    // Keep staged record in sync
+    const updated = buildCurrentRecord();
+    setFinalRecord(updated);
+    onSaveInspection(updated);
+
     setCurrentStep(4);
     // Trigger celebratory confetti if score is high
     if (complianceScore >= 85) {
@@ -661,48 +850,11 @@ Return ONLY valid JSON matching this schema.`;
 
   // Finalize & Generate Statutory Memorandum (Step 5)
   const handleFinalizeReport = () => {
-    const memoNumber = `LM/ENF/2026/${Math.floor(1000 + Math.random() * 9000)}`;
-
-    const newRecord: InspectionRecord = {
-      id: `ins_${Date.now()}`,
-      memoNumber,
-      createdAt: new Date().toISOString(),
-      commodityName: commodityName || 'Pre-Packaged Commodity',
-      category,
-      packageType,
-      brand,
-      manufacturer,
-      mfgAddress,
-      countryOfOrigin,
-      netQuantity,
-      mrp,
-      unitSalePrice,
-      mfgDate,
-      expiryDate,
-      consumerCare,
-      status: complianceStatus,
-      score: complianceScore,
-      officerName: 'Insp. Aniket Verma',
-      officerDesignation: 'Senior Legal Metrology Officer',
-      inspectionLocation,
-      storeName,
-      storeAddress: inspectionLocation,
-      declarations,
-      findings,
-      images,
-      remarks: officerRemarks,
-      actionTaken,
-      batchNumber: batchNumber.trim() || 'UNASSIGNED',
-      lotSize: parseInt(lotSize, 10) || 0,
-      samplesTested,
-      sampleSufficient: isSampleSufficient,
-      statutorySamplingNote: samplingRule.note,
-    };
-
-    setFinalRecord(newRecord);
+    const record = buildCurrentRecord();
+    setFinalRecord(record);
     setCurrentStep(5);
-    onSaveInspection(newRecord);
-    onShowToast('success', 'Statutory Report Generated', `Memo #${memoNumber} sealed and saved to inspection registry.`);
+    onSaveInspection(record);
+    onShowToast('success', 'Statutory Report Generated', `Memo #${record.memoNumber} sealed and saved to inspection registry.`);
   };
 
   const stepsList = [
@@ -1435,26 +1587,38 @@ Return ONLY valid JSON matching this schema.`;
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-200">
             <button
               type="button"
               onClick={() => setCurrentStep(1)}
-              className="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5"
+              className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Photos</span>
             </button>
 
-            <button
-              id="btn-proceed-compliance"
-              type="button"
-              onClick={handleProceedToCompliance}
-              className="min-h-[48px] px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all flex items-center space-x-2 shadow-lg shadow-blue-600/30 hover:scale-[1.01] active:scale-[0.99]"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>Audit Compliance & Offenses</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex items-center space-x-2.5">
+              <button
+                id="btn-save-step3-history"
+                type="button"
+                onClick={handleSaveAndGoToHistory}
+                className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 shadow-md shadow-slate-900/20"
+              >
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Save & View in History</span>
+              </button>
+
+              <button
+                id="btn-proceed-compliance"
+                type="button"
+                onClick={handleProceedToCompliance}
+                className="min-h-[48px] px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all flex items-center space-x-2 shadow-lg shadow-blue-600/30 hover:scale-[1.01] active:scale-[0.99]"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>Audit Compliance & Offenses</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1587,26 +1751,38 @@ Return ONLY valid JSON matching this schema.`;
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-200">
             <button
               type="button"
               onClick={() => setCurrentStep(3)}
-              className="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5"
+              className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1.5"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Verification</span>
             </button>
 
-            <button
-              id="btn-finalize-report"
-              type="button"
-              onClick={handleFinalizeReport}
-              className="min-h-[48px] px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs sm:text-sm transition-all flex items-center space-x-2 shadow-lg shadow-emerald-600/30 hover:scale-[1.01] active:scale-[0.99]"
-            >
-              <FileCheck className="w-4 h-4" />
-              <span>Seal & Generate Official Statutory Memo</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex items-center space-x-2.5">
+              <button
+                id="btn-save-step4-history"
+                type="button"
+                onClick={handleSaveAndGoToHistory}
+                className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 shadow-md shadow-slate-900/20"
+              >
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Save & View in History</span>
+              </button>
+
+              <button
+                id="btn-finalize-report"
+                type="button"
+                onClick={handleFinalizeReport}
+                className="min-h-[48px] px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs sm:text-sm transition-all flex items-center space-x-2 shadow-lg shadow-emerald-600/30 hover:scale-[1.01] active:scale-[0.99]"
+              >
+                <FileCheck className="w-4 h-4" />
+                <span>Seal & Generate Official Statutory Memo</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1614,7 +1790,73 @@ Return ONLY valid JSON matching this schema.`;
       {/* STEP 5: FINAL STATUTORY REPORT MEMORANDUM */}
       {currentStep === 5 && finalRecord && (
         <div className="space-y-6">
+          {/* Top Quick Action Bar */}
+          <div className="no-print bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+            <div className="flex items-center space-x-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-md shadow-emerald-600/20 flex-shrink-0">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-emerald-950">
+                  Statutory Memorandum #{finalRecord.memoNumber} Sealed & Registered
+                </h3>
+                <p className="text-xs text-emerald-800">
+                  Record is securely preserved in Inspection History registry.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2.5 w-full sm:w-auto justify-end">
+              <button
+                id="btn-step5-view-history"
+                type="button"
+                onClick={() => {
+                  if (onNavigateToHistory) onNavigateToHistory();
+                }}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-colors shadow-sm flex items-center space-x-1.5"
+              >
+                <FileCheck className="w-4 h-4" />
+                <span>View in Inspection History</span>
+              </button>
+
+              <button
+                id="btn-step5-new-inspection"
+                type="button"
+                onClick={handleResetForNewInspection}
+                className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-bold text-xs rounded-xl transition-colors shadow-sm flex items-center space-x-1.5"
+              >
+                <RotateCcw className="w-4 h-4 text-slate-600" />
+                <span>Start Another Inspection</span>
+              </button>
+            </div>
+          </div>
+
           <StatutoryReportDocument record={finalRecord} />
+
+          {/* Bottom Navigation */}
+          <div className="no-print flex items-center justify-between pt-4 border-t border-slate-200">
+            <button
+              type="button"
+              onClick={() => setCurrentStep(4)}
+              className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-xl border border-slate-200 transition-colors flex items-center space-x-1.5 shadow-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Compliance</span>
+            </button>
+
+            <button
+              id="btn-step5-bottom-history"
+              type="button"
+              onClick={() => {
+                if (onNavigateToHistory) onNavigateToHistory();
+              }}
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md shadow-blue-600/20 flex items-center space-x-2"
+            >
+              <CheckCircle2 className="w-4 h-4 text-cyan-300" />
+              <span>Go to Inspection History Tab</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       )}
 

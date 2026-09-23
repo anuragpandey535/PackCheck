@@ -52,23 +52,42 @@ export default function App() {
     const syncWithServer = async () => {
       try {
         const response = await fetch('/api/inspections');
-        if (response.ok) {
+        const contentType = response.headers.get('content-type');
+        if (response.ok && contentType && contentType.includes('application/json')) {
           const data = await response.json();
           if (data.success && Array.isArray(data.inspections) && data.inspections.length > 0) {
-            setInspections(data.inspections);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data.inspections));
+            setInspections((currentLocal) => {
+              const mergedMap = new Map<string, InspectionRecord>();
+              // Add server records first
+              data.inspections.forEach((r: InspectionRecord) => {
+                if (r && r.id) mergedMap.set(r.id, r);
+              });
+              // Then local records (which might have newer or offline ones)
+              currentLocal.forEach((r: InspectionRecord) => {
+                if (r && r.id) mergedMap.set(r.id, r);
+              });
+              const mergedList = Array.from(mergedMap.values()).sort(
+                (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+              );
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedList));
+              } catch (e) {}
+              return mergedList;
+            });
             return;
           }
         }
 
-        // If server store is empty, seed it with current inspections
-        await fetch('/api/inspections', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ records: inspections }),
-        });
+        // If server store is empty and server is online, seed it with current inspections
+        if (response.ok && contentType && contentType.includes('application/json')) {
+          await fetch('/api/inspections', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ records: inspections }),
+          });
+        }
       } catch (err) {
-        console.warn('Server filesystem sync unavailable, operating in offline browser storage mode:', err);
+        console.warn('Server filesystem sync operating in offline browser storage mode:', err);
       }
     };
 
@@ -114,25 +133,12 @@ export default function App() {
       return updated;
     });
 
-    setSelectedRecord(newRecord);
-
-    // Persist to Server Disk asynchronously
+    // Persist to Server Disk asynchronously if backend is available
     fetch('/api/inspections', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ record: newRecord }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        showToast(
-          'success',
-          'Record Permanently Archived',
-          `Memo #${newRecord.memoNumber} stored to legal metrology history registry.`
-        );
-      })
-      .catch((err) => {
-        console.warn('Could not persist to server storage, preserved in browser storage:', err);
-      });
+    }).catch(() => {});
   };
 
   // Handle Quick Camera Capture
@@ -172,6 +178,8 @@ export default function App() {
         isMobileOpen={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
         language={language}
+        inspectionsCount={inspections.length}
+        violationsCount={inspections.filter((i) => i.status === 'NON_COMPLIANT').length}
       />
 
       {/* Main Content Area */}
@@ -229,6 +237,10 @@ export default function App() {
               {activeTab === 'new-inspection' && (
                 <NewInspectionView
                   onSaveInspection={handleSaveInspection}
+                  onNavigateToHistory={() => {
+                    setSelectedRecord(null);
+                    setActiveTab('history');
+                  }}
                   onCancel={() => setActiveTab('dashboard')}
                   language={language}
                   onShowToast={showToast}

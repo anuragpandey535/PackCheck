@@ -403,50 +403,62 @@ export const InspectionHistoryView: React.FC<InspectionHistoryViewProps> = ({
                       </div>
 
                       <div className="grid grid-cols-1 gap-2.5">
-                        {group.records.map((record) => (
-                          <div
-                            key={record.id}
-                            className="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 hover:border-blue-400 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
-                          >
-                            <div className="space-y-1">
-                              <div className="flex items-center space-x-2">
-                                <span className="font-bold text-xs sm:text-sm text-slate-900">
-                                  {record.commodityName}
-                                </span>
-                                <span className="text-[10px] text-slate-400 font-mono">
-                                  ({record.memoNumber})
-                                </span>
+                        {group.records.map((record) => {
+                          const isLatest = record.id === inspections[0]?.id;
+                          return (
+                            <div
+                              key={record.id}
+                              className={`p-3.5 sm:p-4 rounded-xl border shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all ${
+                                isLatest
+                                  ? 'bg-blue-50/40 border-blue-300 ring-2 ring-blue-500/20'
+                                  : 'bg-white border-slate-200 hover:border-blue-400'
+                              }`}
+                            >
+                              <div className="space-y-1">
+                                <div className="flex items-center space-x-2">
+                                  <span className="font-bold text-xs sm:text-sm text-slate-900">
+                                    {record.commodityName}
+                                  </span>
+                                  <span className="text-[10px] text-slate-400 font-mono">
+                                    ({record.memoNumber})
+                                  </span>
+                                  {isLatest && (
+                                    <span className="px-1.5 py-0.5 bg-blue-600 text-white font-extrabold text-[9px] rounded uppercase tracking-wider animate-pulse">
+                                      Latest
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                                  <span>Qty: <strong className="text-slate-700">{record.netQuantity}</strong></span>
+                                  <span>MRP: <strong className="text-slate-700">{record.mrp}</strong></span>
+                                  <span>Mfg Date: <strong className="text-slate-700">{record.mfgDate || 'N/A'}</strong></span>
+                                  <span>Store: <strong className="text-slate-700">{record.storeName}</strong></span>
+                                </div>
                               </div>
-                              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
-                                <span>Qty: <strong className="text-slate-700">{record.netQuantity}</strong></span>
-                                <span>MRP: <strong className="text-slate-700">{record.mrp}</strong></span>
-                                <span>Mfg Date: <strong className="text-slate-700">{record.mfgDate || 'N/A'}</strong></span>
-                                <span>Store: <strong className="text-slate-700">{record.storeName}</strong></span>
+
+                              <div className="flex items-center space-x-3 self-end sm:self-auto">
+                                <span className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] ${
+                                  record.status === 'COMPLIANT'
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                    : record.status === 'REVIEW_REQUIRED'
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                    : 'bg-rose-50 text-rose-700 border border-rose-200'
+                                }`}>
+                                  {record.status === 'COMPLIANT' ? 'Passed' : record.status === 'REVIEW_REQUIRED' ? 'Review' : 'Offense'}
+                                </span>
+
+                                <button
+                                  type="button"
+                                  onClick={() => onViewRecord(record)}
+                                  className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-semibold text-xs transition-colors inline-flex items-center space-x-1"
+                                >
+                                  <Eye className="w-3.5 h-3.5" />
+                                  <span>View Memo</span>
+                                </button>
                               </div>
                             </div>
-
-                            <div className="flex items-center space-x-3 self-end sm:self-auto">
-                              <span className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] ${
-                                record.status === 'COMPLIANT'
-                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                  : record.status === 'REVIEW_REQUIRED'
-                                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                  : 'bg-rose-50 text-rose-700 border border-rose-200'
-                              }`}>
-                                {record.status === 'COMPLIANT' ? 'Passed' : record.status === 'REVIEW_REQUIRED' ? 'Review' : 'Offense'}
-                              </span>
-
-                              <button
-                                type="button"
-                                onClick={() => onViewRecord(record)}
-                                className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-semibold text-xs transition-colors inline-flex items-center space-x-1"
-                              >
-                                <Eye className="w-3.5 h-3.5" />
-                                <span>View Memo</span>
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -474,15 +486,29 @@ export const InspectionHistoryView: React.FC<InspectionHistoryViewProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filtered.map((record) => (
-                  <tr key={record.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="font-bold text-slate-900">{record.memoNumber}</div>
-                      <div className="text-[10px] text-slate-500 flex items-center space-x-1 mt-0.5">
-                        <Calendar className="w-3 h-3 text-slate-400" />
-                        <span>{new Date(record.createdAt).toLocaleDateString()}</span>
-                      </div>
-                    </td>
+                {filtered.map((record) => {
+                  const isLatest = record.id === inspections[0]?.id;
+                  return (
+                    <tr
+                      key={record.id}
+                      className={`transition-colors ${
+                        isLatest ? 'bg-blue-50/50 hover:bg-blue-50/70' : 'hover:bg-slate-50/80'
+                      }`}
+                    >
+                      <td className="px-5 py-3.5 whitespace-nowrap">
+                        <div className="flex items-center space-x-1.5">
+                          <span className="font-bold text-slate-900">{record.memoNumber}</span>
+                          {isLatest && (
+                            <span className="px-1.5 py-0.5 bg-blue-600 text-white font-extrabold text-[9px] rounded uppercase tracking-wider">
+                              Latest
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-slate-500 flex items-center space-x-1 mt-0.5">
+                          <Calendar className="w-3 h-3 text-slate-400" />
+                          <span>{new Date(record.createdAt).toLocaleDateString()}</span>
+                        </div>
+                      </td>
 
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
@@ -535,9 +561,10 @@ export const InspectionHistoryView: React.FC<InspectionHistoryViewProps> = ({
                       </button>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                );
+              })}
+            </tbody>
+          </table>
           </div>
         </div>
       )}
